@@ -18,54 +18,23 @@ import android.content.Intent
 import android.util.Log
 
 
-class Login : AppCompatActivity() {
+class Login : homeActivity() {
 
-    private var mAuth: FirebaseAuth? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        mAuth = FirebaseAuth.getInstance()
+
     }
 
     fun login(view:View){
         var email = emailIdLogin.text.toString()
         var password = passwordLogin.text.toString()
-        logintofirebase(email,password)
-    }
-    fun logintofirebase(email: String, password: String) {
-            mAuth!!.signInWithEmailAndPassword(email, password)
-.addOnCompleteListener(this
-) { task ->
-    if (task.isSuccessful) {
-        // Sign in success, update UI with the signed-in user's information
-//        Log.d(FragmentActivity.TAG, "signInWithEmail:success")
-        val user = mAuth!!.getCurrentUser()
-       loadmain()
-    } else {
-        // If sign in fails, display a message to the user.
-//        Log.w(FragmentActivity.TAG, "signInWithEmail:failure", task.exception)
-        Toast.makeText(this, "Authentication failed.Please Try Again",
-            Toast.LENGTH_SHORT).show()
-
-    }
-
-    // ...
-}
+        loginTofirebase(email,password)
     }
 
 
-    fun loadmain(){
-        var currentuser = mAuth!!.currentUser;
-        if(currentuser!=null){
 
-            // save in database
-//            myRef.setValue("Hello, World!")
-//            myRef.child("Users").child(currentuser.uid).setValue(currentuser.email)
-            var intent = Intent(this, MapActivity::class.java)
-            intent.putExtra("email",currentuser.email)
-            intent.putExtra("uid",currentuser.uid)
 
-            startActivity(intent)
-        }
-    }
+
 }

@@ -17,9 +17,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
-class signUp : AppCompatActivity() {
+class signUp : homeActivity() {
 
 
     var imageAccessCode = 456
@@ -31,7 +32,7 @@ class signUp : AppCompatActivity() {
     var firstName:String? =  null
     var lastName:String? = null
 
-    private var mAuth: FirebaseAuth? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -39,7 +40,7 @@ class signUp : AppCompatActivity() {
 //        val rounded = RoundedBitmapDrawableFactory.create(resources,bitmap)
 //        rounded.isCircular =true
 //        profilePicture.setImageDrawable(rounded)
-        mAuth = FirebaseAuth.getInstance()
+
 
     }
 
@@ -49,54 +50,51 @@ class signUp : AppCompatActivity() {
         emailId = emailTxt.text.toString()
         firstName = firstNameTxt.text.toString()
         lastName = lastNameTxt.text.toString()
-        loginToFirebase(emailId!!, password!!)
+        createAccountFirebase(emailId!!, password!!,phoneNumber!!,firstName!!,lastName!!,profileImage)
 
 
 
     }
 
-    override fun onStart() {
-        super.onStart()
-        loadMain()
-    }
 
-    fun loadMain(){
-        var currentuser = mAuth!!.currentUser;
-        if(currentuser!=null){
 
-            // save in database
-//            myRef.setValue("Hello, World!")
-//            myRef.child("Users").child(currentuser.uid).setValue(currentuser.email)
-            var intent = Intent(this, MapActivity::class.java)
-            intent.putExtra("email",currentuser.email)
-            intent.putExtra("uid",currentuser.uid)
-
-            startActivity(intent)
-        }
-
-    }
-    fun loginToFirebase(email: String, password: String) {
-        mAuth!!.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-
-                    Toast.makeText(this, "Authentication Success.", Toast.LENGTH_SHORT).show();
-                    var user = mAuth!!.currentUser;
-                    Log.d("LOGIN", "${user!!.uid}");
-                    loadMain()
-
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("LOGIN", "createUserWithEmail:failure", task.exception);
-                    Toast.makeText(
-                        this, "Authentication failed.",
-                        Toast.LENGTH_SHORT
-                    ).show();
-//                        updateUI(null);
-                }
-
-            }
-    }
+//    fun loadMain(){
+//        var currentuser = mAuth!!.currentUser;
+//        if(currentuser!=null){
+//
+//            // save in database
+////            myRef.setValue("Hello, World!")
+////            myRef.child("Users").child(currentuser.uid).setValue(currentuser.email)
+//            var intent = Intent(this, MapActivity::class.java)
+//            intent.putExtra("email",currentuser.email)
+//            intent.putExtra("uid",currentuser.uid)
+//
+//            startActivity(intent)
+//        }
+//
+//    }
+//    fun loginToFirebase(email: String, password: String) {
+//        mAuth!!.createUserWithEmailAndPassword(email, password)
+//            .addOnCompleteListener(this) { task ->
+//                if (task.isSuccessful) {
+//
+//                    Toast.makeText(this, "Authentication Success.", Toast.LENGTH_SHORT).show();
+//                    var user = mAuth!!.currentUser;
+//                    Log.d("LOGIN", "${user!!.uid}");
+//                    loadMain()
+//
+//                } else {
+//                    // If sign in fails, display a message to the user.
+//                    Log.w("LOGIN", "createUserWithEmail:failure", task.exception);
+//                    Toast.makeText(
+//                        this, "Authentication failed.",
+//                        Toast.LENGTH_SHORT
+//                    ).show();
+////                        updateUI(null);
+//                }
+//
+//            }
+//    }
     fun gallaryImage(view: View) {
 
         checkPermission()

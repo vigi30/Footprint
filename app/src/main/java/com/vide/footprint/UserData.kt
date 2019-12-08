@@ -2,7 +2,7 @@ package com.vide.footprint
 
 import android.net.Uri
 
-class User {
+class UserData {
 
     var phoneNumber:String? =null
     var password:String? = null
@@ -21,6 +21,8 @@ class User {
         this.profileImage =profileImage
     }
 
-
+    companion object    {
+        var myContacts:MutableMap<String,String> =HashMap()
+    }
 
 }

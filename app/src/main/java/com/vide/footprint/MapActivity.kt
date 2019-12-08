@@ -22,7 +22,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import java.lang.Exception
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapActivity : homeActivity() , OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
 
