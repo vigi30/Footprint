@@ -50,7 +50,7 @@ class signUp : homeActivity() {
         emailId = emailTxt.text.toString()
         firstName = firstNameTxt.text.toString()
         lastName = lastNameTxt.text.toString()
-        createAccountFirebase(emailId!!, password!!,phoneNumber!!,firstName!!,lastName!!,profileImage)
+       var  currentphone=createAccountFirebase(emailId!!, password!!,phoneNumber!!,firstName!!,lastName!!,profileImage)
 
 
 
@@ -121,6 +121,7 @@ class signUp : homeActivity() {
                         Manifest.permission.READ_EXTERNAL_STORAGE
                     )
                 ) {
+
                     // Show an explanation to the user *asynchronously* -- don't block
                     // this thread waiting for the user's response! After the user
                     // sees the explanation, try again to request the permission.

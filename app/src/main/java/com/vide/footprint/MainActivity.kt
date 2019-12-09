@@ -8,9 +8,11 @@ import android.view.MenuItem
 
 class MainActivity : AppCompatActivity() {
 
+    var userPhoneNumber:String? =null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        userPhoneNumber= intent.getStringExtra("currentPhoneNumber")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -24,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         when(item.itemId){
             R.id.addTracker ->{
                 val intent = Intent(this, Mycontacts::class.java)
+                intent.putExtra("currentPhoneNumber", userPhoneNumber)
                 startActivity(intent)}
             R.id.help ->{
 

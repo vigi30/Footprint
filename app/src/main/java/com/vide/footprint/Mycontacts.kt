@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_mycontacts.*
 import kotlinx.android.synthetic.main.contact_list_view.view.*
 import android.view.LayoutInflater
-
+import com.google.firebase.database.FirebaseDatabase
 
 
 class Mycontacts : AppCompatActivity() {
@@ -30,15 +30,19 @@ class Mycontacts : AppCompatActivity() {
     var adapter:ContactAdapter?=null
     var contactAccessCode =123
     var item:MenuItem?= null
-
+    var database = FirebaseDatabase.getInstance()
+    var myRef = database.getReference("Users")
+    var mAuth: FirebaseAuth? = null
+    var userPhoneNumber:String? =null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mycontacts)
-
+        mAuth = FirebaseAuth.getInstance()
         listOfContact = ArrayList<UserContact>()
 //        dummyData()
         adapter = ContactAdapter(this, listOfContact)
         viewList.adapter =adapter
+         userPhoneNumber= intent.getStringExtra("currentPhoneNumber")
 
 
         viewList.setOnItemLongClickListener(){ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
@@ -118,7 +122,9 @@ class Mycontacts : AppCompatActivity() {
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.finishActivity ->{FirebaseAuth.getInstance().signOut()}
+            R.id.finishActivity ->{FirebaseAuth.getInstance().signOut()
+                val intent =Intent(this,homeActivity::class.java)
+            startActivity(intent)}
 //                FirebaseAuth.getInstance().signOut()}}
             R.id.addContact ->{
         checkPermission()
@@ -128,6 +134,7 @@ class Mycontacts : AppCompatActivity() {
                 for (item in listofDelContact ){
                     UserData.myContacts.remove(item.phoneNumber)
                     refreshData()
+                    myRef.child(item.phoneNumber!!).child("Finders").child(userPhoneNumber!!).removeValue()
                 }
 
                 listofDelContact.clear()
@@ -230,10 +237,15 @@ class Mycontacts : AppCompatActivity() {
                     if(hasPhoneNumber.equals("1")){
                         val phones = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID +"="+Id,null,null)
                         phones!!.moveToFirst()
-                        val phonenumber = phones.getString(phones.getColumnIndex("data1"))
+                        var phonenumber = phones.getString(phones.getColumnIndex("data1"))
+                        phonenumber =UserData.formatPhoneNumber(phonenumber)
                         val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                        UserData.myContacts.put(phonenumber, name)
+                            UserData.myContacts.put(phonenumber, name)
                         refreshData()
+//                        myRef.child(phonenumber).child("Finders").child(mAuth!!.currentUser!!.phoneNumber!!).setValue(true)
+
+                        println("userphone number $$$$$$$$$$$$$$$$$$$$4: $userPhoneNumber ")
+                        myRef.child(phonenumber).child("Finders").child(userPhoneNumber!!).setValue(true)
 
                     }
 
