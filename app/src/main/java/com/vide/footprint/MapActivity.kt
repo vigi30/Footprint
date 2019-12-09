@@ -10,6 +10,7 @@ import android.location.LocationManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -20,23 +21,59 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 class MapActivity : homeActivity() , OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
 
     var accessCode =123
-
+    var contactPhoneNUmber:String?=null
+    var userPhoneNumber:String?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
+        contactPhoneNUmber = intent.getStringExtra("contactPhoneNumber")
+        userPhoneNumber = intent.getStringExtra("currentPhoneNumber")
+//        val contactPhoneNUmber = intent.getStringExtra("contactPhoneNumber")
+        Log.d("MapActivity ","contactPhoneNumber : $contactPhoneNUmber")
+        myRef.child(contactPhoneNUmber!!).child("location").addValueEventListener(object :ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                try {
+                    val contactInfo = p0.value as HashMap<String, Any>
+                    var latitude = contactInfo["latitude"].toString()
+                    var longitude = contactInfo["longitude"].toString()
+                    Log.d("MapActivity ","longitude : $latitude")
+                    Log.d("MapActivity ","latitude : $longitude")
+                    MapActivity.lastSeen = contactInfo["lastSeen"].toString()
+
+                    MapActivity.contactCoordinate = LatLng(latitude.toDouble(), longitude.toDouble())
+                  load()
+
+                } catch (ex: Exception) {
+                }
+
+            }
+        })
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
+
+    }
+    fun load(){
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -46,118 +83,24 @@ class MapActivity : homeActivity() , OnMapReadyCallback {
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
+    companion object{
+        var contactCoordinate = LatLng(-34.0, 151.0)
+        var lastSeen = "UnKnown"
+    }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Add a marker in Sydney and move the camera
-//        val sydney = LatLng(-34.0, 151.0)
-//        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
 
-        checkPermission()
-    }
-    fun checkPermission(){
-
-        if(Build.VERSION.SDK_INT>=23){
-
-
-            // Here, thisActivity is the current activity
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-                // Permission is not granted
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-                    Toast.makeText(this,"We need to access the location services then only we will be able to the device location information",
-                        Toast.LENGTH_LONG).show()
-                    ActivityCompat.requestPermissions(this,
-                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        accessCode)
-
-                } else {
-                    // No explanation needed, we can request the permission.
-                    ActivityCompat.requestPermissions(this,
-                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        accessCode)
-
-                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
-                }
-            } else {
-                // Permission has already been granted
-                getUserLocation()
-            }
-        }
+        var mythread = myThread()
+        mythread.start()
 
     }
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            accessCode-> {
-                // If request is cancelled, the result arrays are empty.
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
 
-                    getUserLocation()
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(this,"WE can not get accessed to the location services",Toast.LENGTH_LONG).show()
-                }
-                return
-            }
-
-            // Add other 'when' lines to check for other
-            // permissions this app might request.
-            else -> {
-                // Ignore all other requests.
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-    var location: Location? = null
-
-    var address: MutableList<Address>? =null
-
-    inner class MyLocationServices : LocationListener {
-
-
-        constructor(){
-            location = Location("Start")
-            location!!.latitude =0.0
-            location!!.longitude =0.0
-        }
-        override fun onLocationChanged(p0: Location?) {
-            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            location = p0
-
-        }
-
-        override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun onProviderEnabled(p0: String?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun onProviderDisabled(p0: String?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-    }
     inner class myThread : Thread{
         constructor():super(){
 
         }
-
         override fun run() {
             var localityName:String? = null
             while(true){
@@ -165,22 +108,11 @@ class MapActivity : homeActivity() , OnMapReadyCallback {
                     runOnUiThread {
                         mMap.clear()
 
-//                        try {
-//                            var geocode = Geocoder(applicationContext)
-//                            address = geocode.getFromLocation(
-//                                location!!.longitude,
-//                                location!!.latitude,
-//                                1
-//                            )
 //
-//                             localityName=
-//                                address!!.get(0).locality + address!!.get(0).countryName
-//                        }catch (ex:Exception){
-//                            println("what is missing herer$address")
-//                        println("is it $localityName")}
-                        val sydney = LatLng(location!!.latitude, location!!.longitude)
-                        mMap.addMarker(MarkerOptions().position(sydney).title("$localityName"))
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+//
+//                        var sydney = LatLng(latitude, location!!.longitude)
+                        mMap.addMarker(MarkerOptions().position(contactCoordinate).title(lastSeen))
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(contactCoordinate))
                     }
                     Thread.sleep(1000)
                 }
@@ -192,23 +124,6 @@ class MapActivity : homeActivity() , OnMapReadyCallback {
     }
 
 
-    fun getUserLocation(){
-
-        var myLocation =  MyLocationServices()
-        var locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,3,3f,myLocation)
-        }
-        else{
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,3,3f,myLocation)
-        }
-
-
-        var mythread = myThread()
-        mythread.start()
-
-
-    }
 
 
 }

@@ -141,8 +141,13 @@ open class homeActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
 //        Log.d(FragmentActivity.TAG, "signInWithEmail:success")
+
+
                     val user = mAuth!!.getCurrentUser()
                     getPhoneNumber(email)
+//                    val df = SimpleDateFormat("yyyy/MMM/dd HH:MM:ss")
+//                    val date = Date()
+//                    myRef.child(currentphonenumber!!).child("request").setValue(df.format(date).toString())
 //                    loadmain(currentphonenumber)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -167,6 +172,8 @@ open class homeActivity : AppCompatActivity() {
                 // save in database
 //            myRef.setValue("Hello, World!")
 //            myRef.child("Users").child(currentuser.uid).setValue(currentuser.email)
+
+//                myRef.child(currentPhoneNumber!!).child("request").setValue(df.format(date).toString())
                 println("user phone number <><><<><><><><><><><<< inside loadmain :${mAuth!!.currentUser!!.email} ")
                 var intent = Intent(this, MainActivity::class.java)
 
@@ -207,8 +214,6 @@ open class homeActivity : AppCompatActivity() {
 
 
                         currentphonenumber = data.key.toString()
-                        Log.d("homeActivity", "$ph_no")
-                        setCurrentPhoneNumber(currentphonenumber!!)
                         loadmain(currentphonenumber)
                     }
                 }
@@ -217,12 +222,13 @@ open class homeActivity : AppCompatActivity() {
 
 
         })
-        Log.d("homeActivity", "done $ph_no")
+
 
     }
     fun setCurrentPhoneNumber(phno:String)
     {
-        this.currentphonenumber=phno
+
+        currentphonenumber=phno
     }
 }
 

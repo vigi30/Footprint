@@ -29,9 +29,9 @@ class UserData() :homeActivity(){
         var myContacts:MutableMap<String,String> =HashMap()
         fun formatPhoneNumber(phoneNumber:String):String {
             var onlyNumber= phoneNumber.replace("[^0-9]".toRegex(),"")
-            if (phoneNumber[0]== '+') {
-                onlyNumber ="+"+ phoneNumber
-            }
+//            if (phoneNumber[0]== '+') {
+//                onlyNumber ="+"+ phoneNumber
+//            }
 
             return  onlyNumber
         }

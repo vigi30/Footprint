@@ -123,7 +123,7 @@ class Mycontacts : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.finishActivity ->{FirebaseAuth.getInstance().signOut()
-                val intent =Intent(this,homeActivity::class.java)
+                val intent =Intent(this,MainActivity::class.java)
             startActivity(intent)}
 //                FirebaseAuth.getInstance().signOut()}}
             R.id.addContact ->{
@@ -242,7 +242,7 @@ class Mycontacts : AppCompatActivity() {
                         val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
                             UserData.myContacts.put(phonenumber, name)
                         refreshData()
-//                        myRef.child(phonenumber).child("Finders").child(mAuth!!.currentUser!!.phoneNumber!!).setValue(true)
+                        myRef.child(userPhoneNumber!!).child("Finders").child(phonenumber).setValue(true)
 
                         println("userphone number $$$$$$$$$$$$$$$$$$$$4: $userPhoneNumber ")
                         myRef.child(phonenumber).child("Finders").child(userPhoneNumber!!).setValue(true)

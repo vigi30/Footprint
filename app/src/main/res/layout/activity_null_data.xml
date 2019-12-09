@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingTop="250dp"
+    android:textAlignment="center">
+
+    <TextView
+        android:id="@+id/nullText"
+        android:layout_width="match_parent"
+        android:layout_height="77dp"
+        android:layout_margin="10dp"
+        android:fontFamily="monospace"
+        android:text="Sorry No User data is available.Please Add contacts who you want to Track"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold|italic" />
+</LinearLayout>
