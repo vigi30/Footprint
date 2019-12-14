@@ -32,7 +32,7 @@ open class homeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d("homeActivity", "onCreate")
         setContentView(R.layout.activity_home)
-         mAuth = FirebaseAuth.getInstance()
+        mAuth = FirebaseAuth.getInstance()
 
         Log.d("homeActivity", "onCreate $mAuth")
     }
@@ -194,7 +194,7 @@ open class homeActivity : AppCompatActivity() {
             getPhoneNumber(curr.email)
         }
 
-       Log.d("homeActivity", " onStart : ")
+        Log.d("homeActivity", " onStart : ")
 //        loadmain(currentphonenumber)
     }
 
@@ -231,4 +231,3 @@ open class homeActivity : AppCompatActivity() {
         currentphonenumber=phno
     }
 }
-

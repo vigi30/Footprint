@@ -9,7 +9,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/finishActivity"
-        android:icon="@drawable/ic_shortcut_send"
+        android:icon="@drawable/ic_shortcut_arrow_back"
         android:title="finish"
         app:showAsAction="always" />
     <item

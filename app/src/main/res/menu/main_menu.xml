@@ -3,13 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/help"
-        android:icon="@drawable/ic_shortcut_add"
-        android:title="help"
+        android:id="@+id/logout"
+        android:icon="@drawable/logout"
+        android:title="logout"
         app:showAsAction="always" />
     <item
         android:id="@+id/addTracker"
-        android:icon="@drawable/ic_shortcut_person"
+        android:icon="@drawable/ic_shortcut_person_add"
         android:title="ADD"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/del1"
+        android:icon="@drawable/ic_shortcut_delete_forever"
+        android:title="delete"
+        android:visible="false"
         app:showAsAction="always" />
 </menu>

@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Address
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -19,14 +18,12 @@ import android.widget.BaseAdapter
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_mycontacts.*
-import kotlinx.android.synthetic.main.activity_mycontacts.viewList
-import kotlinx.android.synthetic.main.activity_null_data.view.*
 import kotlinx.android.synthetic.main.contact_list_view.view.*
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -59,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             val date = Date()
             myRef.child(contact.phoneNumber!!).child("request").setValue(df.format(date).toString())
             Log.d("MainActivity","${contact.phoneNumber}")
-            val intent = Intent(applicationContext,MapActivity::class.java)
+            val intent = Intent(applicationContext,MapsActivity::class.java)
             intent.putExtra("contactPhoneNumber",contact.phoneNumber)
             intent.putExtra("currentPhoneNumber",userPhoneNumber)
             startActivity(intent)
@@ -146,9 +143,14 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, Mycontacts::class.java)
                 intent.putExtra("currentPhoneNumber", userPhoneNumber)
                 startActivity(intent)}
-            R.id.help ->{
+            R.id.logout ->{
 
-            }
+                FirebaseAuth.getInstance().signOut()
+                val intentHome = Intent(this, homeActivity::class.java)
+
+                startActivity(intentHome)}
+
+
             else -> {
                 return super.onOptionsItemSelected(item)
             }
@@ -370,7 +372,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onProviderDisabled(p0: String?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
         }
 
     }
