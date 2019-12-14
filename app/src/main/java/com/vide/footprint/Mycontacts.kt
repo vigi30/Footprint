@@ -37,21 +37,22 @@ class Mycontacts : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mycontacts)
+        // intialize the Firebase authentication
         mAuth = FirebaseAuth.getInstance()
         listOfContact = ArrayList<UserContact>()
 //        dummyData()
+        // setting up the custom adapter
         adapter = ContactAdapter(this, listOfContact)
         viewList.adapter =adapter
          userPhoneNumber= intent.getStringExtra("currentPhoneNumber")
 
-
+    // /onClick events when clicked on any Item in listview.
         viewList.setOnItemLongClickListener(){ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
 
 
 //            println("index number $i and viewlist ${listofItems[i].itemDes}")
             view1.background =ContextCompat.getDrawable(applicationContext,R.drawable.background)
-            println("i am done")
-
+// setting the delete icon visible
             item!!.setVisible(true)
 //
 //            del.visibility=View.VISIBLE
@@ -68,6 +69,8 @@ class Mycontacts : AppCompatActivity() {
        listofDelContact.add(listofContact)
     }
 
+
+    // custom apdapter definiation
     inner class ContactAdapter :BaseAdapter{
         var listofContact:ArrayList<UserContact>? =null
         var context:Context? =null
@@ -75,6 +78,7 @@ class Mycontacts : AppCompatActivity() {
             this.listofContact =listofContact
             this.context =context
         }
+        // Set the views to an Listview in actual layout
         override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
             var contact = listofContact!![p0]
             var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -100,7 +104,7 @@ class Mycontacts : AppCompatActivity() {
 
 
 
-
+    // creating the menu icons at menu bar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflator = menuInflater
         inflator.inflate(R.menu.contact_menu,menu)
@@ -109,6 +113,7 @@ class Mycontacts : AppCompatActivity() {
 
     }
 
+    // updates the data and also update the listview UI
     fun refreshData(){
         listOfContact.clear()
 
@@ -122,15 +127,16 @@ class Mycontacts : AppCompatActivity() {
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
+            // takes to the mainactivity
             R.id.finishActivity ->{FirebaseAuth.getInstance().signOut()
                 val intent =Intent(this,MainActivity::class.java)
             startActivity(intent)}
 //                FirebaseAuth.getInstance().signOut()}}
-            R.id.addContact ->{
+            R.id.addContact ->{ // to addd the contact
         checkPermission()
             }
 
-            R.id.del ->{
+            R.id.del ->{// delete the item in an listview
                 for (item in listofDelContact ){
                     UserData.myContacts.remove(item.phoneNumber)
                     refreshData()
@@ -149,6 +155,7 @@ class Mycontacts : AppCompatActivity() {
         return true
     }
 
+    // permission to read the contacts
     fun checkPermission(){
 
         if(Build.VERSION.SDK_INT>=23){
@@ -190,6 +197,7 @@ class Mycontacts : AppCompatActivity() {
 
     }
 
+
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
@@ -218,12 +226,15 @@ class Mycontacts : AppCompatActivity() {
     }
 
     val contactCode =123
+
+    //// picking the contacts from the contact app
     fun pickContact(){
 
     val intent = Intent(Intent.ACTION_PICK,ContactsContract.Contacts.CONTENT_URI)
         startActivityForResult(intent,contactCode)
     }
 
+    //// Callback method - to handle the response from the user on selecting the app
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         when(requestCode){

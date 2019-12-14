@@ -33,6 +33,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         contactPhoneNumber = intent.getStringExtra("contactPhoneNumber")
         currentUserPhoneNumber = intent.getStringExtra("currentPhoneNumber")
 
+        // to get the latitude and longitude information
+
         myRef.child(contactPhoneNumber!!).child("location").addValueEventListener(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
 
@@ -44,8 +46,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val longitude =  contactLocation["longitude"] as Double
                  lastSeen = contactLocation["lastSeen"] as String
                 MapsActivity.mapLocation = LatLng(latitude,longitude)
+                // fragment intializes
                 mapfragment()
 
+                // calling the thread function
                 var mythread = myThread()
                 mythread.start()
             }
@@ -54,12 +58,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         })
     }
 
+    // fragment declareation and intialization for representing map
     fun mapfragment(){
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
 
+
+    // a thread to display the the map
 
     inner class myThread : Thread{
         constructor():super(){
@@ -73,19 +80,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     runOnUiThread {
                         mMap.clear()
 
-//                        try {
-//                            var geocode = Geocoder(applicationContext)
-//                            address = geocode.getFromLocation(
-//                                location!!.longitude,
-//                                location!!.latitude,
-//                                1
-//                            )
-//
-//                             localityName=
-//                                address!!.get(0).locality + address!!.get(0).countryName
-//                        }catch (ex:Exception){
-//                            println("what is missing herer$address")
-//                        println("is it $localityName")}
+                    // intializing the marker and move the camera to the coordinates
 
                         mMap.addMarker(MarkerOptions().position(mapLocation).title("$lastSeen"))
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(mapLocation))
@@ -114,6 +109,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         var mapLocation = LatLng(-34.0, 151.0)
         var lastSeen:String? =null
     }
+
+
+    // a callback funtion for the map
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 

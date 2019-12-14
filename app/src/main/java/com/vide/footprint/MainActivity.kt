@@ -48,25 +48,32 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+            // getting the values from the intent which was passed from homepage
         userPhoneNumber= intent.getStringExtra("currentPhoneNumber")
 
+        // custom adapter set to a ListView
         adapter = ContactAdapter(this, listOfContact)
         viewListMain.adapter =adapter
 
+        //onClick events when clicked on any Item in listview.
         viewListMain.setOnItemClickListener(){adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
 
+            // getting the date and time value
             var contact = listOfContact[i]
             val df = SimpleDateFormat("yyyy/MMM/dd HH:MM:ss")
             val date = Date()
             myRef.child(contact.phoneNumber!!).child("request").setValue(df.format(date).toString())
             Log.d("MainActivity","${contact.phoneNumber}")
+
+            // Redirects to Maps activity
             val intent = Intent(applicationContext,MapsActivity::class.java)
             intent.putExtra("contactPhoneNumber",contact.phoneNumber)
             intent.putExtra("currentPhoneNumber",userPhoneNumber)
             startActivity(intent)
 
         }
+
+        // onClick events, Used to delete the item in a listview
         viewListMain.setOnItemLongClickListener(){ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
 
 
@@ -74,6 +81,7 @@ class MainActivity : AppCompatActivity() {
             view1.background =ContextCompat.getDrawable(applicationContext,R.drawable.background)
             println("i am done")
 
+            // setting the delete icon visible
             item!!.setVisible(true)
 //
 //            del.visibility=View.VISIBLE
@@ -94,16 +102,20 @@ class MainActivity : AppCompatActivity() {
     var isAccessible =false
     override fun onResume() {
         super.onResume()
-
+        // updating the data and also updating the listview
         refreshData()
 
+        // once per activity
         if(isAccessible) {return}
+        // get contacts permission
         checkPermission()
-
+        // get location permission
         checkLocationPermission()
 
 
     }
+
+    // updates the data and also update the listview UI
     fun refreshData(){
 
         myRef.child(userPhoneNumber!!).child("Finders").addValueEventListener(object :
@@ -139,6 +151,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    // creating the menu icons at menu bar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflator = menuInflater
         inflator.inflate(R.menu.main_menu,menu)
@@ -147,24 +160,28 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    // getting the list of items to be deleted
     fun del_item(listofContact:UserContact){
         listofDelContact.add(listofContact)
     }
 
+    // onclick events when clicked in any one of menu icons
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.addTracker ->{
+                // redirects to Mycontacts acitivity with current user phone number
                 val intent = Intent(this, Mycontacts::class.java)
                 intent.putExtra("currentPhoneNumber", userPhoneNumber)
                 startActivity(intent)}
             R.id.logout ->{
-
+                // logsout the current user from application and redirects to homepage activity
                 FirebaseAuth.getInstance().signOut()
                 val intentHome = Intent(this, homeActivity::class.java)
 
                 startActivity(intentHome)}
 
             R.id.del1 ->{
+                // deleted the items which were selected by long press in listview
                 for (item in listofDelContact ){
                     UserData.myContacts.remove(item.phoneNumber)
                     refreshData()
@@ -181,6 +198,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    // custom apdapter definiation
     inner class ContactAdapter : BaseAdapter {
         var listofContact:ArrayList<UserContact>? =null
         var context: Context? =null
@@ -188,6 +206,7 @@ class MainActivity : AppCompatActivity() {
             this.listofContact =listofContact
             this.context =context
         }
+        // Set the views to an Listview in actual layout
         override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
             var contact = listofContact!![p0]
             if(contact.name.equals("Empty_Users")){
@@ -224,22 +243,26 @@ class MainActivity : AppCompatActivity() {
 
 
     var listOfContacts=HashMap<String,String>()
+
+    // picking the contacts from the contact app
     fun pickContact(){
 
         try{
             listOfContacts.clear()
-
+            // User can have multiple phone numbers
             val cursor=contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,null,null,null)
             cursor!!.moveToFirst()
             do {
+                // retrieve the name and phone number of the phone number
                 val name=cursor!!.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
                 val phoneNumber=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-
+                    // format the phone number to common pattern
                 listOfContacts.put(UserData.formatPhoneNumber(phoneNumber),name)
             }while (cursor!!.moveToNext())
         }catch (ex:Exception){}
     }
 
+    // contact permission
     fun checkPermission(){
 
         if(Build.VERSION.SDK_INT>=23){
@@ -280,6 +303,8 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    //lget the location permissions
     fun checkLocationPermission(){
 
         if(Build.VERSION.SDK_INT>=23){
@@ -365,12 +390,15 @@ class MainActivity : AppCompatActivity() {
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
+
+
+   //location instance of Location class
     companion object{
         var location: Location? = null
     }
 
 
-
+    // a class that implements interface
     inner class MyLocationServices : LocationListener {
 
 
@@ -380,6 +408,8 @@ class MainActivity : AppCompatActivity() {
             location!!.latitude =0.0
             location!!.longitude =0.0
         }
+
+        // set the current location of latitude and longitude whenever the user changed its location
         override fun onLocationChanged(p0: Location?) {
             //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             location = p0
@@ -412,67 +442,17 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    // Getting the user location from GPS provider
     fun getUserLocation() {
 
         val df = SimpleDateFormat("yyyy/MMM/dd HH:MM:ss")
         val date = Date()
         var myLocation = MyLocationServices()
         var locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//        location information such as latitude and longitude
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0.0f, myLocation)
-//        myRef.child(userPhoneNumber!!).child("location").child("latitude")
-//            .setValue(location!!.latitude)
-//        myRef.child(userPhoneNumber!!).child("location").child("longitude")
-//            .setValue(location!!.longitude)
-//        myRef.child(userPhoneNumber!!).child("location").child("lastSeen")
-//            .setValue(df.format(date).toString())
 
     }
-//        loadRequest()
-//       myRef.child(userPhoneNumber!!).child("request").addValueEventListener(object : ValueEventListener{
-//
-//           override fun onDataChange(p0: DataSnapshot) {
-//
-//
-//               if(location==null){return}
-//               else{
-//
-//
-//
-//                   Log.d("MainActivity","latitude:${location!!.latitude}")
-//                   Log.d("MainActivity","longitude:${location!!.longitude}")
-//
-//
-//
-//               }
-//           }
-//           override fun onCancelled(p0: DatabaseError) {
-//
-//           }
-//
-//
-//       })
-
-
-
-
-//    }
-////    fun loadRequest(){
-////        val df = SimpleDateFormat("yyyy/MMM/dd HH:MM:ss")
-////        val date = Date()
-////        for (i in 0..10){
-////            TimeUnit.SECONDS.sleep(1)
-////            myRef.child(userPhoneNumber!!).child("request").setValue(df.format(date).toString())
-////        }
-//
-//
-//        Log.d("onResume","${df.format(date).toString()}")
-//    }
-
-//    override fun onStart() {
-//        super.onStart()
-//        loadRequest()
-//    }
-
-
 
 }

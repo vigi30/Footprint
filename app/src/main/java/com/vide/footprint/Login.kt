@@ -27,6 +27,7 @@ class Login : homeActivity() {
 
     }
 
+    // onClick event when clicked on calls the loginTofirebase function in homeActivity
     fun login(view:View){
         var email = emailIdLogin.text.toString()
         var password = passwordLogin.text.toString()

@@ -36,14 +36,10 @@ class signUp : homeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
-//        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.default_image)
-//        val rounded = RoundedBitmapDrawableFactory.create(resources,bitmap)
-//        rounded.isCircular =true
-//        profilePicture.setImageDrawable(rounded)
-
 
     }
 
+    //onClick event called when user clicks on sign up button
     fun createAccount(view: View) {
         phoneNumber = phoneNumTxt.text.toString()
         password = passwordTxt.text.toString()
@@ -56,47 +52,10 @@ class signUp : homeActivity() {
 
     }
 
-
-
-//    fun loadMain(){
-//        var currentuser = mAuth!!.currentUser;
-//        if(currentuser!=null){
-//
-//            // save in database
-////            myRef.setValue("Hello, World!")
-////            myRef.child("Users").child(currentuser.uid).setValue(currentuser.email)
-//            var intent = Intent(this, MapActivity::class.java)
-//            intent.putExtra("email",currentuser.email)
-//            intent.putExtra("uid",currentuser.uid)
-//
-//            startActivity(intent)
-//        }
-//
-//    }
-//    fun loginToFirebase(email: String, password: String) {
-//        mAuth!!.createUserWithEmailAndPassword(email, password)
-//            .addOnCompleteListener(this) { task ->
-//                if (task.isSuccessful) {
-//
-//                    Toast.makeText(this, "Authentication Success.", Toast.LENGTH_SHORT).show();
-//                    var user = mAuth!!.currentUser;
-//                    Log.d("LOGIN", "${user!!.uid}");
-//                    loadMain()
-//
-//                } else {
-//                    // If sign in fails, display a message to the user.
-//                    Log.w("LOGIN", "createUserWithEmail:failure", task.exception);
-//                    Toast.makeText(
-//                        this, "Authentication failed.",
-//                        Toast.LENGTH_SHORT
-//                    ).show();
-////                        updateUI(null);
-//                }
-//
-//            }
-//    }
+    //onClick event called when user clicks on Add profile picture button
     fun gallaryImage(view: View) {
 
+        // to check the permission of the gallary i.e storage
         checkPermission()
 
     }
@@ -191,12 +150,14 @@ class signUp : homeActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    // opening the gallary and selecting an image
     fun loadImage() {
 
         var intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         startActivityForResult(intent, imageAccessCode)
     }
 
+    // response from the user that is the image selected by the user is handled here
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == imageAccessCode && data != null && resultCode == RESULT_OK) {
