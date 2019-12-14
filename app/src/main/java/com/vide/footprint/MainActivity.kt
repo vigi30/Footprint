@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_mycontacts.*
 import kotlinx.android.synthetic.main.contact_list_view.view.*
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -33,6 +34,8 @@ import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
 
+    var listofDelContact = ArrayList<UserContact>()
+    var item:MenuItem?= null
     var userPhoneNumber:String? =null
     var listOfContact = ArrayList<UserContact>()
     var adapter: ContactAdapter?=null
@@ -62,6 +65,23 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
 
         }
+        viewListMain.setOnItemLongClickListener(){ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
+
+
+            //            println("index number $i and viewlist ${listofItems[i].itemDes}")
+            view1.background =ContextCompat.getDrawable(applicationContext,R.drawable.background)
+            println("i am done")
+
+            item!!.setVisible(true)
+//
+//            del.visibility=View.VISIBLE
+            del_item(listOfContact[i])
+
+//            UserData.myContacts.remove(listOfContact[i].phoneNumber)
+//            refreshData()
+            true
+        }
+
 
 
 //        viewList.setOnItemLongClickListener(){ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
@@ -133,8 +153,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflator = menuInflater
         inflator.inflate(R.menu.main_menu,menu)
+        item= menu!!.findItem(R.id.del1)
         return true
 
+    }
+
+    fun del_item(listofContact:UserContact){
+        listofDelContact.add(listofContact)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -150,7 +175,16 @@ class MainActivity : AppCompatActivity() {
 
                 startActivity(intentHome)}
 
+            R.id.del1 ->{
+                for (item in listofDelContact ){
+                    UserData.myContacts.remove(item.phoneNumber)
+                    refreshData()
+                    myRef.child(userPhoneNumber!!).child("Finders").child(item.phoneNumber!!).removeValue()
+                    myRef.child(item.phoneNumber!!).child("Finders").child(userPhoneNumber!!).removeValue()
+                }
 
+                listofDelContact.clear()
+            }
             else -> {
                 return super.onOptionsItemSelected(item)
             }
