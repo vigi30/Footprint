@@ -134,6 +134,8 @@ class Mycontacts : AppCompatActivity() {
                 for (item in listofDelContact ){
                     UserData.myContacts.remove(item.phoneNumber)
                     refreshData()
+                    myRef.child(userPhoneNumber!!).child("Finders").child(item.phoneNumber!!).removeValue()
+                    myRef.child(item.phoneNumber!!).child("Finders").child(userPhoneNumber!!).removeValue()
 
                 }
 

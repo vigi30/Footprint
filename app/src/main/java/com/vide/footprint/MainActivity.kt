@@ -27,8 +27,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_mycontacts.*
 import kotlinx.android.synthetic.main.contact_list_view.view.*
 import java.lang.Exception
+import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -84,22 +86,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-//        viewList.setOnItemLongClickListener(){ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
-//
-//
-//            //            println("index number $i and viewlist ${listofItems[i].itemDes}")
-//            view1.background = ContextCompat.getDrawable(applicationContext,R.drawable.background)
-//            println("i am done")
-//
-//            item!!.setVisible(true)
-////
-////            del.visibility=View.VISIBLE
-//            del_item(listOfContact[i])
-//
-////            UserData.myContacts.remove(listOfContact[i].phoneNumber)
-////            refreshData()
-//            true
-//        }
+
 
     }
 
@@ -114,6 +101,8 @@ class MainActivity : AppCompatActivity() {
         checkPermission()
 
         checkLocationPermission()
+
+
     }
     fun refreshData(){
 
@@ -326,6 +315,9 @@ class MainActivity : AppCompatActivity() {
                 }
             } else {
                 // Permission has already been granted
+//                val df = SimpleDateFormat("yyyy/MMM/dd HH:MM:ss")
+//                val date = Date()
+//                myRef.child(userPhoneNumber!!).child("request").setValue(df.format(date).toString())
                 getUserLocation()
             }
         }
@@ -353,7 +345,9 @@ class MainActivity : AppCompatActivity() {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-
+//                    val df = SimpleDateFormat("yyyy/MMM/dd HH:MM:ss")
+//                    val date = Date()
+//                    myRef.child(userPhoneNumber!!).child("request").setValue(df.format(date).toString())
                     getUserLocation()
                 } else {
                     // permission denied, boo! Disable the
@@ -389,12 +383,20 @@ class MainActivity : AppCompatActivity() {
         override fun onLocationChanged(p0: Location?) {
             //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             location = p0
+            val df = SimpleDateFormat("yyyy/MMM/dd HH:MM:ss")
+            val date = Date()
             currentuserlat =location!!.latitude
             currentuserlong =location!!.longitude
-
+            myRef.child(userPhoneNumber!!).child("location").child("latitude")
+                .setValue(location!!.latitude)
+            myRef.child(userPhoneNumber!!).child("location").child("longitude")
+                .setValue(location!!.longitude)
+            myRef.child(userPhoneNumber!!).child("location").child("lastSeen")
+                .setValue(df.format(date).toString())
             Log.d("MainActivity","inside class latitude:${location!!.latitude}")
             Log.d("MainActivity","inside class latitude:${location!!.longitude}")
-
+            Log.d("MainActivity","inside class1 latitude:${currentuserlat}")
+            Log.d("MainActivity","inside class1 latitude:${ currentuserlong}")
         }
 
         override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
@@ -410,46 +412,67 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-    fun getUserLocation(){
+    fun getUserLocation() {
 
-        var myLocation =  MyLocationServices()
+        val df = SimpleDateFormat("yyyy/MMM/dd HH:MM:ss")
+        val date = Date()
+        var myLocation = MyLocationServices()
         var locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0.0f,myLocation)
-        }
-        else{
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0.0f,myLocation)
-        }
-//        Log.d("MainActivity","latitude:${location!!.latitude}")
-//        Log.d("MainActivity","latitude:${location!!.longitude}")
-//        myRef.child(userPhoneNumber!!).child("location").child("latitude").setValue(myLocation.location!!.latitude)
-//        myRef.child(userPhoneNumber!!).child("location").child("longitude").setValue(myLocation.location!!.longitude)
-//        myRef.child(userPhoneNumber!!).child("location").child("lastSeen").setValue(df.format(date).toString())
-
-       myRef.child(userPhoneNumber!!).child("request").addValueEventListener(object : ValueEventListener{
-
-           override fun onDataChange(p0: DataSnapshot) {
-
-               if(location==null){return}
-               else{
-                   val df = SimpleDateFormat("yyyy/MMM/dd HH:MM:ss")
-                   val date = Date()
-                   Log.d("MainActivity","latitude:${currentuserlat}")
-                   Log.d("MainActivity","latitude:${currentuserlong}")
-                   myRef.child(userPhoneNumber!!).child("location").child("latitude").setValue(currentuserlat)
-                   myRef.child(userPhoneNumber!!).child("location").child("longitude").setValue(currentuserlong)
-                   myRef.child(userPhoneNumber!!).child("location").child("lastSeen").setValue(df.format(date).toString())
-
-               }
-           }
-           override fun onCancelled(p0: DatabaseError) {
-
-           }
-
-
-       })
-
-
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0.0f, myLocation)
+//        myRef.child(userPhoneNumber!!).child("location").child("latitude")
+//            .setValue(location!!.latitude)
+//        myRef.child(userPhoneNumber!!).child("location").child("longitude")
+//            .setValue(location!!.longitude)
+//        myRef.child(userPhoneNumber!!).child("location").child("lastSeen")
+//            .setValue(df.format(date).toString())
 
     }
+//        loadRequest()
+//       myRef.child(userPhoneNumber!!).child("request").addValueEventListener(object : ValueEventListener{
+//
+//           override fun onDataChange(p0: DataSnapshot) {
+//
+//
+//               if(location==null){return}
+//               else{
+//
+//
+//
+//                   Log.d("MainActivity","latitude:${location!!.latitude}")
+//                   Log.d("MainActivity","longitude:${location!!.longitude}")
+//
+//
+//
+//               }
+//           }
+//           override fun onCancelled(p0: DatabaseError) {
+//
+//           }
+//
+//
+//       })
+
+
+
+
+//    }
+////    fun loadRequest(){
+////        val df = SimpleDateFormat("yyyy/MMM/dd HH:MM:ss")
+////        val date = Date()
+////        for (i in 0..10){
+////            TimeUnit.SECONDS.sleep(1)
+////            myRef.child(userPhoneNumber!!).child("request").setValue(df.format(date).toString())
+////        }
+//
+//
+//        Log.d("onResume","${df.format(date).toString()}")
+//    }
+
+//    override fun onStart() {
+//        super.onStart()
+//        loadRequest()
+//    }
+
+
+
 }

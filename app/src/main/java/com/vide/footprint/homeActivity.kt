@@ -27,6 +27,7 @@ open class homeActivity : AppCompatActivity() {
     var mAuth: FirebaseAuth? = null
     var database = FirebaseDatabase.getInstance()
     var myRef = database.getReference("Users")
+    var phone:String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,11 +145,13 @@ open class homeActivity : AppCompatActivity() {
 
 
                     val user = mAuth!!.getCurrentUser()
+                    getLoginPhoneNumber(email)
                     getPhoneNumber(email)
 //                    val df = SimpleDateFormat("yyyy/MMM/dd HH:MM:ss")
 //                    val date = Date()
-//                    myRef.child(currentphonenumber!!).child("request").setValue(df.format(date).toString())
-//                    loadmain(currentphonenumber)
+////                    myRef.child(phone!!).child("request").setValue(df.format(date).toString())
+
+
                 } else {
                     // If sign in fails, display a message to the user.
 //        Log.w(FragmentActivity.TAG, "signInWithEmail:failure", task.exception)
@@ -225,9 +228,41 @@ open class homeActivity : AppCompatActivity() {
 
 
     }
-    fun setCurrentPhoneNumber(phno:String)
-    {
+    fun getLoginPhoneNumber(email_id: String?) {
+        var ph_no: String? = null
+        myRef.addListenerForSingleValueEvent(object : ValueEventListener {
 
-        currentphonenumber=phno
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+                for (data in p0.children) {
+
+                    if (data.child("Email-ID").getValue()!!.equals(email_id)) {
+
+
+                        currentphonenumber = data.key.toString()
+                        loadmain(currentphonenumber)
+                        returnPhoneNumber(currentphonenumber!!)
+                    }
+                }
+
+            }
+
+
+        })
+
+
     }
+
+
+    fun returnPhoneNumber(ph_no:String){
+        phone = ph_no
+
+    }
+
+
+
 }
