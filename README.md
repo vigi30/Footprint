@@ -2,7 +2,7 @@
 An android application based on Kotlin to track the location of a user
 
 
-## Introduction
+### Introduction
 In the present world, the number of crimes is increasing day by day, which makes a person anxious to know about the whereabouts of a 
 family or friends when they are traveling to a remote place or not answering the calls and messages for an extended period.
 If the person knows the whereabouts of a family member, it will make the person track them and make sure they are safe and sound. 
