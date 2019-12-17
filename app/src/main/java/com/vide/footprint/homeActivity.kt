@@ -163,8 +163,8 @@ open class homeActivity : AppCompatActivity() {
 
                     val user = mAuth!!.getCurrentUser()
                     // getting the current user phone number
-                    getLoginPhoneNumber(email)
-//                    getPhoneNumber(email)
+//                    getLoginPhoneNumber(email)
+                    getPhoneNumber(email)
 
                 } else {
                     // If sign in fails, display a message to the user.
