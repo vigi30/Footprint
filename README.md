@@ -45,7 +45,7 @@ Features that included in this application :
 
 ### Authors
 
-* **Vignesh Shankar** - *Initial work* 
+* **Vignesh Shankar** 
 
 
 
