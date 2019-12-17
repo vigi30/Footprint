@@ -23,9 +23,9 @@ will be deprecated within a month.Feel free to use my google map api key.However
 
 ### Features
 
-Features that :
+Features that included in this application :
 
-<ul>Sign up</ul>
+<ol>Sign up</ol>
 
 
 ## Deployment
