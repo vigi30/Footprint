@@ -10,7 +10,7 @@ Since in the present world, most people carry GPS enabled mobile devices, I have
 which enables the user to track their loved ones precisely and visualize their current location on a map to ensure that they are safe.
 
 
-###Getting Started
+### Getting Started
 Download the Zip file and open it through Android Studio.This project code is written in Kotlin.
 
 ### Prerequisites
@@ -20,11 +20,11 @@ firebase account and create a project there and use your google-services.json fi
 will be deprecated within a month.Feel free to use my google map api key.However I reccommend that you use your own key.
 
 
-```
-###Features
+
+### Features
 
 Number of things that you can do with the Footprint application are as follows:
-```
+
 <ul>Sign up</ul>
 
 
