@@ -23,7 +23,7 @@ will be deprecated within a month.Feel free to use my google map api key.However
 
 ### Features
 
-Number of things that you can do with the Footprint application are as follows:
+Features that :
 
 <ul>Sign up</ul>
 
