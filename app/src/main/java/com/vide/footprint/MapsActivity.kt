@@ -39,7 +39,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             override fun onCancelled(p0: DatabaseError) {
 
             }
-
+            // when a data is changed in the location below call back method is invoked
             override fun onDataChange(p0: DataSnapshot) {
              val contactLocation = p0.value as HashMap<String,Any>
                 val latitude =  contactLocation["latitude"] as Double
@@ -105,6 +105,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      * installed Google Play services and returned to the app.
      */
 
+
+// an object which contains information about the latitutde and longitude
     companion object{
         var mapLocation = LatLng(-34.0, 151.0)
         var lastSeen:String? =null

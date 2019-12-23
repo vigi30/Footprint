@@ -60,6 +60,7 @@ class signUp : homeActivity() {
 
     }
 
+    // checking the permission of the services
     fun checkPermission() {
 
         if (Build.VERSION.SDK_INT >= 23) {
@@ -115,7 +116,7 @@ class signUp : homeActivity() {
 
     }
 
-
+    // a callback method to handle the response from the user
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>, grantResults: IntArray

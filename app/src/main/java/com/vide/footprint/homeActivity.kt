@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-
 open class homeActivity : AppCompatActivity() {
     var currentphonenumber: String? = null
     var currentEmail :String? =null

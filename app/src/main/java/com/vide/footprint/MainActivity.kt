@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    // custom apdapter definiation
+    // custom apdapter for listview
     inner class ContactAdapter : BaseAdapter {
         var listofContact:ArrayList<UserContact>? =null
         var context: Context? =null
@@ -240,8 +240,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
-
     var listOfContacts=HashMap<String,String>()
 
     // picking the contacts from the contact app
@@ -262,7 +260,7 @@ class MainActivity : AppCompatActivity() {
         }catch (ex:Exception){}
     }
 
-    // contact permission
+    // check the contact permission
     fun checkPermission(){
 
         if(Build.VERSION.SDK_INT>=23){
@@ -304,7 +302,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    //lget the location permissions
+    //check the location permissions
     fun checkLocationPermission(){
 
         if(Build.VERSION.SDK_INT>=23){
@@ -348,6 +346,9 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+
+    // a callback method to handle the response from the user
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {

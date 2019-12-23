@@ -65,6 +65,7 @@ class Mycontacts : AppCompatActivity() {
 
     }
 
+    // a function to delete the users details from the list
     fun del_item(listofContact:UserContact){
        listofDelContact.add(listofContact)
     }
@@ -125,6 +126,8 @@ class Mycontacts : AppCompatActivity() {
 
         adapter!!.notifyDataSetChanged()
     }
+
+    // an onClick event when clicked on menu items
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             // takes to the mainactivity
@@ -198,6 +201,7 @@ class Mycontacts : AppCompatActivity() {
     }
 
 
+    // a callback method to handle the response from the user
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
